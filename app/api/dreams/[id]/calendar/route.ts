@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { createEvents, EventAttributes } from 'ics';
-import { format } from 'date-fns';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const dream = await db.dream.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { tasks: true },
     });
 
@@ -46,7 +46,7 @@ export async function GET(
     return new NextResponse(value, {
       headers: {
         'Content-Type': 'text/calendar',
-        'Content-Disposition': `attachment; filename="dream-tasks-${params.id}.ics"`,
+        'Content-Disposition': `attachment; filename="dream-tasks-${id}.ics"`,
       },
     });
   } catch (error) {

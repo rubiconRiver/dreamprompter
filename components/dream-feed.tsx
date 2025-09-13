@@ -1,5 +1,4 @@
 import { db } from '@/lib/db';
-import { format } from 'date-fns';
 import DreamCard from './dream-card';
 
 export default async function DreamFeed() {

@@ -12,9 +12,15 @@ interface DreamCardProps {
   dream: DreamWithTasks;
 }
 
+interface DreamTheme {
+  keyword: string;
+  category: string;
+  action: string;
+}
+
 export default function DreamCard({ dream }: DreamCardProps) {
   const [showTasks, setShowTasks] = useState(false);
-  const themes = dream.themes as any[];
+  const themes = (dream.themes as unknown) as DreamTheme[];
 
   const downloadCalendar = async () => {
     const response = await fetch(`/api/dreams/${dream.id}/calendar`);
@@ -50,7 +56,7 @@ export default function DreamCard({ dream }: DreamCardProps) {
           <div className="mb-4">
             <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">Dream Themes:</p>
             <div className="flex flex-wrap gap-2">
-              {themes.map((theme: any, index: number) => (
+              {themes.map((theme, index) => (
                 <span
                   key={index}
                   className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm"

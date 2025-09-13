@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const dream = await db.dream.create({
       data: {
         content,
-        themes: themes,
+        themes: JSON.parse(JSON.stringify(themes)),
         tasks: {
           create: themes.map((theme, index) => ({
             title: theme.action,

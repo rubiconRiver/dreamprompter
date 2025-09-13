@@ -3,13 +3,14 @@ import { db } from '@/lib/db';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const { completed } = await request.json();
 
     const task = await db.task.update({
-      where: { id: params.id },
+      where: { id },
       data: { completed },
     });
 
