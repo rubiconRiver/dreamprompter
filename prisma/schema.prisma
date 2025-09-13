@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Dream {
+  id          String   @id @default(cuid())
+  content     String   @db.Text
+  themes      Json     // Extracted themes from the dream
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tasks       Task[]
+
+  @@index([createdAt])
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  theme       String   // The theme that generated this task
+  action      String   // The mapped action (e.g., "Visit the zoo")
+  dueDate     DateTime
+  completed   Boolean  @default(false)
+
+  dreamId     String
+  dream       Dream    @relation(fields: [dreamId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([dreamId])
+  @@index([dueDate])
+  @@index([completed])
+}
